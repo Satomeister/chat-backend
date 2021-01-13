@@ -1,0 +1,46 @@
+Arguments: 
+  E:\Programs\node.exe C:\Users\klima\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js init
+
+PATH: 
+  E:\js-dev\srudy-projects\fullstack\chat\chat-back\node_modules\.bin;C:\Python39\Scripts\;C:\Python39\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;E:\Programs\Git\cmd;E:\Programs\;C:\ProgramData\chocolatey\bin;C:\Users\klima\AppData\Local\Microsoft\WindowsApps;C:\Users\klima\AppData\Roaming\npm;E:\Programs\WebStorm 2020.1.4\bin;;E:\Microsoft VS Code\bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  14.15.3
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: canceled
+      at Interface.<anonymous> (C:\Users\klima\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:136216:13)
+      at Interface.emit (events.js:315:20)
+      at Interface._ttyWrite (readline.js:875:16)
+      at ReadStream.onkeypress (readline.js:213:10)
+      at ReadStream.emit (events.js:315:20)
+      at emitKeys (internal/readline/utils.js:345:14)
+      at emitKeys.next (<anonymous>)
+      at ReadStream.onData (readline.js:1144:36)
+      at ReadStream.emit (events.js:315:20)
+      at addChunk (internal/streams/readable.js:309:12)
+
+npm manifest: 
+  {
+    "name": "chat-back",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Taras KLimarchuk",
+    "license": "ISC"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
