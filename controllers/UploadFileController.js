@@ -1,5 +1,4 @@
 const cloudinary = require("../core/cloudinary");
-const UploadFile = require("../models/uploadFile");
 const isValidObjectId = require("../utils/isValidObjectId");
 
 class UploadFileController {
@@ -21,24 +20,14 @@ class UploadFileController {
             });
           }
 
-          const fileData = {
-            filename: result.original_filename,
-            size: result.bytes,
-            ext: result.format,
-            url: result.url,
-            user: req.user._id,
-            dialog: dialogId,
-          };
-
-          const uploadFile = await UploadFile.create(fileData);
-
           res.json({
             status: "success",
-            data: uploadFile,
+            data: result.url,
           });
         })
         .end(file.buffer);
     } catch (error) {
+      console.log(error);
       res.status(500).json({ status: "error", message: error });
     }
   }

@@ -3,13 +3,6 @@ const Dialog = require("../models/dialog");
 const isValidObjectId = require("../utils/isValidObjectId");
 
 class MessageController {
-  constructor(io) {
-    this.io = io;
-    this.io.on("connection", (socket) => {
-      this.socket = socket;
-    });
-  }
-
   // async index(req, res) {
   //   try {
   //     const data = {
@@ -41,8 +34,8 @@ class MessageController {
       const data = {
         dialog: req.body.dialog,
         text: req.body.text,
-        attachments: req.attachments,
-        sender: req.user._id,
+        attachments: req.body.attachments,
+        sender: req.user,
       };
 
       if (!isValidObjectId(data.dialog)) {
@@ -55,15 +48,15 @@ class MessageController {
 
       let message = await Message.create(data);
 
-      message.populate("dialog attachments", "partner admin").execPopulate();
-
+      message
+        .populate("dialog sender", "admin partner name avatar")
+        .execPopulate();
       const dialog = await Dialog.findById(data.dialog).populate(
         "admin partner"
       );
       dialog.lastMessage = message._id;
-      dialog.messagesCount = dialog.messagesCount + 1;
+      dialog.unreadMessagesCount = +dialog.unreadMessagesCount + 1;
       await dialog.save();
-
       res.json({
         status: "success",
         data: { message, dialog: { ...dialog._doc, lastMessage: message } },
@@ -73,6 +66,47 @@ class MessageController {
       res.status(500).json({ status: "error", message: error });
     }
   };
+
+  async getNewMessagesChunk(req, res) {
+    try {
+      const data = {
+        dialogId: req.params.dialogId,
+        messagesCount: +req.query.count,
+      };
+
+      const messages = await Message.find({ dialog: data.dialogId })
+        .populate([
+          {
+            path: "dialog",
+            populate: {
+              path: "partner admin",
+            },
+          },
+          {
+            path: "sender",
+          },
+        ])
+        .sort({ createdAt: "-1" })
+        .skip(data.messagesCount)
+        .limit(+process.env.MESSAGES_CHUNK);
+
+      res.json({
+        status: "success",
+        data: messages,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ status: "error", message: error });
+    }
+  }
+
+  async updateReadStatus(req, _) {
+    const messageId = req.params.messageId;
+
+    const message = await Message.findById(messageId);
+    message.read = true;
+    message.save();
+  }
 }
 
-module.exports = MessageController;
+module.exports = new MessageController();

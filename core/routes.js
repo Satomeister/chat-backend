@@ -1,14 +1,11 @@
 const { register: registerValidation } = require("../utils/validators");
 const multer = require("./multer");
 const passport = require("./passport");
-
+// TODO: delete io
 module.exports = createRoutes = (app, io) => {
-  const UserCtrl = require("../controllers/UserController");
-  const UserController = new UserCtrl(io);
-  const DialogCtrl = require("../controllers/DialogController");
-  const DialogController = new DialogCtrl(io);
-  const MessageCtrl = require("../controllers/MessageController");
-  const MessageController = new MessageCtrl(io);
+  const UserController = require("../controllers/UserController");
+  const DialogController = require("../controllers/DialogController");
+  const MessageController = require("../controllers/MessageController");
   const UploadFileController = require("../controllers/UploadFileController");
 
   app.post("/signup", registerValidation, UserController.create);
@@ -30,12 +27,17 @@ module.exports = createRoutes = (app, io) => {
     DialogController.create
   );
 
-  // app.get(
-  //   "/messages/:dialogId",
-  //   passport.authenticate("jwt"),
-  //   MessageController.index
-  // );
+  app.get(
+    "/messages/:dialogId",
+    passport.authenticate("jwt"),
+    MessageController.getNewMessagesChunk
+  );
   app.post("/message", passport.authenticate("jwt"), MessageController.create);
+  app.put(
+    "/message/:messageId",
+    passport.authenticate("jwt"),
+    MessageController.updateReadStatus
+  );
 
   app.post(
     "/file/:dialogId",

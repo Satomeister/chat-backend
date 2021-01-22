@@ -19,8 +19,7 @@ const MessageSchema = new Schema(
     },
     attachments: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "uploadFile",
+        type: String,
       },
     ],
   },

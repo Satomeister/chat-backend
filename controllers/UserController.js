@@ -2,12 +2,9 @@ const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const passport = require("../core/passport");
 const User = require("../models/user");
+const getAvatarColor = require("../utils/getAvatarColor");
 
 class UserController {
-  constructor(io) {
-    this.io = io;
-  }
-
   async index(req, res) {
     try {
       const value = req.query.user;
@@ -17,6 +14,7 @@ class UserController {
           { email: new RegExp(value, "i") },
           { name: new RegExp(value, "i") },
         ],
+        _id: { $ne: req.user._id },
       });
 
       res.json({
@@ -24,6 +22,7 @@ class UserController {
         data: users,
       });
     } catch (error) {
+      console.log(error);
       res.status(500).json({ status: "error", message: error });
     }
   }
@@ -47,6 +46,7 @@ class UserController {
       const candidate = await User.findOne({
         $or: [{ name: data.name }, { email: data.email }],
       });
+
       if (candidate) {
         return res
           .status(400)
@@ -54,6 +54,9 @@ class UserController {
       }
 
       const user = await User.create(data);
+      user.avatar = getAvatarColor(user._id);
+      await user.save();
+
       const userData = user.toJSON();
 
       res.json({
@@ -66,6 +69,7 @@ class UserController {
         },
       });
     } catch (error) {
+      console.log(error);
       res.status(500).json({
         status: "error",
         error,
@@ -84,6 +88,7 @@ class UserController {
           message: info.message,
         });
       }
+
       const userData = user.toJSON();
 
       return res.json({
@@ -112,6 +117,17 @@ class UserController {
       });
     }
   }
+
+  async updateOnlineStatus(isOnline, userId) {
+    try {
+      const user = await User.findById(userId);
+      if (user) {
+        user.isOnline = isOnline;
+        user.save();
+      }
+      return user;
+    } catch (error) {}
+  }
 }
 
-module.exports = UserController;
+module.exports = new UserController();

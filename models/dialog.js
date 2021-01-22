@@ -16,6 +16,10 @@ const DialogSchema = new Schema(
       ref: "message",
       type: Schema.Types.ObjectId,
     },
+    unreadMessagesCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

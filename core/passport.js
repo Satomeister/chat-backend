@@ -1,5 +1,4 @@
 const passport = require("passport");
-const bcrypt = require("bcrypt");
 const LocalStrategy = require("passport-local").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;
 const JWTstrategy = require("passport-jwt").Strategy;
