@@ -1,8 +1,8 @@
 const { register: registerValidation } = require("../utils/validators");
 const multer = require("./multer");
 const passport = require("./passport");
-// TODO: delete io
-module.exports = createRoutes = (app, io) => {
+
+module.exports = createRoutes = (app) => {
   const UserController = require("../controllers/UserController");
   const DialogController = require("../controllers/DialogController");
   const MessageController = require("../controllers/MessageController");
@@ -20,7 +20,7 @@ module.exports = createRoutes = (app, io) => {
     DialogController.getDialog
   );
   app.get("/dialogs", passport.authenticate("jwt"), DialogController.index);
-  // TODO: prohibit to create dialog with you
+
   app.post(
     "/dialog/:partnerId",
     passport.authenticate("jwt"),

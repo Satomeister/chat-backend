@@ -3,32 +3,6 @@ const Dialog = require("../models/dialog");
 const isValidObjectId = require("../utils/isValidObjectId");
 
 class MessageController {
-  // async index(req, res) {
-  //   try {
-  //     const data = {
-  //       dialog: req.params.dialogId,
-  //     };
-  //
-  //     if (!isValidObjectId(data.dialog)) {
-  //       return res.status(400).send();
-  //     }
-  //
-  //     const messages = await Message.find({ dialog: data.dialog }).populate({
-  //       path: "dialog",
-  //       populate: {
-  //         path: "partner admin",
-  //       },
-  //     });
-  //
-  //     res.json({
-  //       status: "success",
-  //       data: messages,
-  //     });
-  //   } catch (error) {
-  //     res.status(500).json({ status: "error", message: error });
-  //   }
-  // }
-
   create = async (req, res) => {
     try {
       const data = {

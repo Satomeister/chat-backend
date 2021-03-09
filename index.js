@@ -7,14 +7,14 @@ const createSocket = require("./core/socket.io.js");
 const createRoutes = require("./core/routes");
 
 const app = express();
-const { http, io } = createSocket(app);
+const { http } = createSocket(app);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-createRoutes(app, io);
+createRoutes(app);
 
-http.listen(process.env.PORT | 3001, () => {
-  console.log(`${process.env.PORT} running`);
+http.listen(process.env.PORT || 3001, () => {
+  console.log(`${process.env.PORT || 3001} running`);
 });

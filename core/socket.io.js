@@ -46,5 +46,5 @@ module.exports = function (app) {
     });
   });
 
-  return { http, io };
+  return { http };
 };

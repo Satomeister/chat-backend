@@ -42,18 +42,6 @@ class DialogController {
         return res.status(404).send();
       }
 
-      // await Message.updateMany(
-      //   { dialog: dialogId, sender: { $ne: req.user._id } },
-      //   { read: true }
-      // );
-
-      // don't work
-      // console.log(unreadMessages.length);
-      // if (!!unreadMessages) {
-      //   dialog.unreadMessagesCount = 0;
-      //   await dialog.save();
-      // }
-
       const messages = await Message.find({ dialog: dialogId })
         .populate([
           {
@@ -126,19 +114,23 @@ class DialogController {
 
   async setUnreadMessagesCount(dialogId, userId) {
     try {
-      const unreadMessages = await Message.find({
-        dialog: dialogId,
-        sender: { $ne: userId },
-        read: false,
-      });
-      console.log(unreadMessages);
-      if (unreadMessages.length) {
-        console.log("NO");
+      const unreadMessages = await Message.updateMany(
+        {
+          dialog: dialogId,
+          sender: { $ne: userId },
+          read: false,
+        },
+        { $set: { read: true } }
+      );
+
+      if (unreadMessages.nModified) {
         const dialog = await Dialog.findById(dialogId);
         dialog.unreadMessagesCount = 0;
         await dialog.save();
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 
